@@ -18,4 +18,6 @@ dependencies {
 	api project(":extensions:gdx-box2d-parent:gdx-box2d")
 	api project(":extensions:gdx-bullet")
 	api project(":extensions:gdx-freetype")
+    implementation project(':backends:gdx-backend-lwjgl3')
+	implementation project(':backends:gdx-backend-lwjgl3')
 }

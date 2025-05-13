@@ -226,7 +226,7 @@ public interface Input {
 		public static final int NUMPAD_LEFT_PAREN = 162;
 		public static final int NUMPAD_RIGHT_PAREN = 163;
 		public static final int NUM_LOCK = 143;
-
+		public static final int INTL_BACKSLASH = 164;
 		public static final int WORLD_1 = 240;
 		public static final int WORLD_2 = 241;
 
@@ -285,6 +285,7 @@ public interface Input {
 			// META* variables should not be used with this method.
 			case UNKNOWN:
 				return "Unknown";
+
 			case SOFT_LEFT:
 				return "Soft Left";
 			case SOFT_RIGHT:
@@ -431,7 +432,9 @@ public interface Input {
 				return "]";
 			case BACKSLASH:
 				return "\\";
-			case SEMICOLON:
+				case INTL_BACKSLASH:
+					return "\\";
+				case SEMICOLON:
 				return ";";
 			case APOSTROPHE:
 				return "'";

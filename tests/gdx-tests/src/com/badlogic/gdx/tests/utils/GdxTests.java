@@ -204,6 +204,7 @@ public class GdxTests {
 		InterpolationTest.class,
 		IntersectorOverlapConvexPolygonsTest.class,
 		InverseKinematicsTest.class,
+		IsoKeyboardTest.class,
 		IsometricTileTest.class,
 		KinematicBodyTest.class,
 		KTXTest.class,
