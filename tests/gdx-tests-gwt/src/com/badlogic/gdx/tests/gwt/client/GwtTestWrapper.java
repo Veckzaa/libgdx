@@ -12,6 +12,7 @@ import com.badlogic.gdx.tests.AnnotationTest;
 import com.badlogic.gdx.tests.AssetManagerTest;
 import com.badlogic.gdx.tests.AtlasIssueTest;
 import com.badlogic.gdx.tests.AudioChangeDeviceTest;
+import com.badlogic.gdx.tests.BackSpaceTest;
 import com.badlogic.gdx.tests.BigMeshTest;
 import com.badlogic.gdx.tests.BitmapFontAlignmentTest;
 import com.badlogic.gdx.tests.BitmapFontFlipTest;
@@ -380,6 +381,12 @@ public class GwtTestWrapper extends AbstractTestWrapper {
 				return new LabelTest();
 			}
 		});
+		tests.add(new GwtInstancer() {
+			public GdxTest instance () {
+				return new BackSpaceTest();
+			}
+		});
+
 		// new GwtInstancer() {public GdxTest instance(){return new MatrixJNITest();}}, // No purpose
 		tests.add(new GwtInstancer() {
 			public GdxTest instance () {

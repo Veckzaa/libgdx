@@ -16,7 +16,8 @@
 
 dependencies {
 	api libraries.gwt
-	compileOnly libraries.compileOnly.gwt
+    implementation project(':tests:gdx-tests')
+    compileOnly libraries.compileOnly.gwt
 }
 
 configurations.all {
