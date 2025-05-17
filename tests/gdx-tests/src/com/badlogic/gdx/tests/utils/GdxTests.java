@@ -199,6 +199,7 @@ public class GdxTests {
 		ImmediateModeRendererTest.class,
 		IndexBufferObjectShaderTest.class,
 		InputTest.class,
+		ForegroundFpsTest.class,
 		InstancedRenderingTest.class,
 		IntegerBitmapFontTest.class,
 		InterpolationTest.class,

@@ -23,6 +23,7 @@ import com.badlogic.gdx.tests.Box2DTest;
 import com.badlogic.gdx.tests.Box2DTestCollection;
 import com.badlogic.gdx.tests.BufferUtilsTest;
 import com.badlogic.gdx.tests.ClipboardTest;
+import com.badlogic.gdx.tests.ForegroundFpsTest;
 import com.badlogic.gdx.tests.TiledMapObjectPropertyTest;
 import com.badlogic.gdx.tests.ColorTest;
 import com.badlogic.gdx.tests.ComplexActionTest;
@@ -482,6 +483,7 @@ public class GwtTestWrapper extends AbstractTestWrapper {
 			}
 		});
 
+
 // new GwtInstancer() {public GdxTest instance(){return new RunnablePostTest();}}, // Goes into infinite loop
 // new GwtInstancer() {public GdxTest instance(){return new ScrollPaneTest();}}, // FIXME this messes up stuff, why?
 // new GwtInstancer() {public GdxTest instance(){return new ShaderMultitextureTest();}}, // FIXME fucks up stuff
@@ -666,6 +668,11 @@ public class GwtTestWrapper extends AbstractTestWrapper {
 		tests.add(new GwtInstancer() {
 			public GdxTest instance () {
 				return new VertexArrayTest();
+			}
+		});
+		tests.add(new GwtInstancer() {
+			public GdxTest instance () {
+				return new ForegroundFpsTest();
 			}
 		});
 		// these may have issues with tab getting intercepted by the browser

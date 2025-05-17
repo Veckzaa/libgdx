@@ -26,6 +26,7 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.DisplayCutout;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import com.badlogic.gdx.AbstractGraphics;
@@ -79,7 +80,7 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 	protected long frameStart = System.nanoTime();
 	protected long frameId = -1;
 	protected int frames = 0;
-	protected int fps;
+	protected int fps = 0;
 
 	volatile boolean created = false;
 	volatile boolean running = false;
@@ -101,7 +102,6 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 		ResolutionStrategy resolutionStrategy) {
 		this(application, config, resolutionStrategy, true);
 	}
-
 	public AndroidGraphics (AndroidApplicationBase application, AndroidApplicationConfiguration config,
 		ResolutionStrategy resolutionStrategy, boolean focusableView) {
 		bufferFormat = new BufferFormat(config.r, config.g, config.b, config.a, config.depth, config.stencil, config.numSamples,
@@ -319,7 +319,6 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 		}
 		app.getApplicationListener().resize(width, height);
 	}
-
 	@Override
 	public void onSurfaceCreated (javax.microedition.khronos.opengles.GL10 gl, EGLConfig config) {
 		eglContext = ((EGL10)EGLContext.getEGL()).eglGetCurrentContext();
@@ -441,9 +440,8 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 	@Override
 	public void onDrawFrame (javax.microedition.khronos.opengles.GL10 gl) {
 		long time = System.nanoTime();
-		// After pause deltaTime can have somewhat huge value that destabilizes the mean, so let's cut it off
 		if (!resume) {
-			deltaTime = (time - lastFrameTime) / 1000000000.0f;
+			deltaTime = (time - lastFrameTime) / 1_000_000_000.0f;
 		} else {
 			deltaTime = 0;
 		}
@@ -459,16 +457,13 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 			lpause = pause;
 			ldestroy = destroy;
 			lresume = resume;
-
 			if (resume) {
 				resume = false;
 			}
-
 			if (pause) {
 				pause = false;
 				synch.notifyAll();
 			}
-
 			if (destroy) {
 				destroy = false;
 				synch.notifyAll();
@@ -527,14 +522,33 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 			Gdx.app.log(LOG_TAG, "destroyed");
 		}
 
-		if (time - frameStart > 1000000000) {
+		if (time - frameStart > 1_000_000_000) {
 			fps = frames;
 			frames = 0;
 			frameStart = time;
 		}
 		frames++;
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R && fps > 0) {
+			capFramesPerSecond(time);
+		}
 	}
 
+	/**
+	 * Ensures the frame rate does not exceed the configured maximum.
+	 * Should only trigger on Build version smaller than 30
+	 * @param time the timestamp (in nanoseconds) recorded at the start of this frame
+	 */
+	private void capFramesPerSecond(long time){
+		long frameDurationNs = System.nanoTime() - time;
+		long targetDurationNs = 1_000_000_000L / fps;
+		long sleepNs = targetDurationNs - frameDurationNs;
+		if (sleepNs > 0) {
+			try {
+				Thread.sleep(sleepNs / 1_000_000L, (int)(sleepNs % 1_000_000L));
+			} catch (InterruptedException ignored) {
+			}
+		}
+	}
 	@Override
 	public long getFrameId () {
 		return frameId;
@@ -742,8 +756,18 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 	public void setVSync (boolean vsync) {
 	}
 
+	/**
+	 * Sets an fps cap if given a value
+	 * @param fps the targeted fps; default differs by platform
+	 */
 	@Override
 	public void setForegroundFPS (int fps) {
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
+			Surface surface = view.getHolder().getSurface();
+			surface.setFrameRate((float)fps, Surface.FRAME_RATE_COMPATIBILITY_DEFAULT);
+		} else {
+			this.fps = fps;
+		}
 	}
 
 	@Override
