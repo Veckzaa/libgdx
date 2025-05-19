@@ -158,8 +158,8 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 		DisplayMetrics dm = app.getContext().getResources().getDisplayMetrics();
 		ppiX = dm.xdpi;
 		ppiY = dm.ydpi;
-		ppcX = dm.xdpi  / 2.54f;
-		ppcY = dm.ydpi  / 2.54f;
+		ppcX = dm.xdpi / 2.54f;
+		ppcY = dm.ydpi / 2.54f;
 		density = dm.density;
 	}
 
@@ -340,15 +340,15 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 		logManagedCachesStatus();
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			WindowMetrics wmMetrics= app.getWindowManager().getCurrentWindowMetrics();
+			WindowMetrics wmMetrics = app.getWindowManager().getCurrentWindowMetrics();
 			Rect bounds = wmMetrics.getBounds();
 			this.width = bounds.width();
 			this.height = bounds.height();
-		}else {
+		} else {
 			Display display = app.getWindowManager().getDefaultDisplay();
 			Point size = new Point();
 			display.getSize(size);
-			this.width  = size.x;
+			this.width = size.x;
 			this.height = size.y;
 		}
 
@@ -736,12 +736,12 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 		DisplayMetrics metrics = new DisplayMetrics();
 		DisplayManager displayManager = (DisplayManager)app.getContext().getSystemService(Context.DISPLAY_SERVICE);
 		display = displayManager.getDisplay(Display.DEFAULT_DISPLAY);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-			WindowMetrics wmMetrics= app.getWindowManager().getCurrentWindowMetrics();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			WindowMetrics wmMetrics = app.getWindowManager().getCurrentWindowMetrics();
 			Rect bounds = wmMetrics.getBounds();
 			width = bounds.width();
 			height = bounds.height();
-		}else {
+		} else {
 			display.getRealMetrics(metrics);
 			height = metrics.heightPixels;
 			width = metrics.widthPixels;
