@@ -102,6 +102,7 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 		ResolutionStrategy resolutionStrategy) {
 		this(application, config, resolutionStrategy, true);
 	}
+
 	public AndroidGraphics (AndroidApplicationBase application, AndroidApplicationConfiguration config,
 		ResolutionStrategy resolutionStrategy, boolean focusableView) {
 		bufferFormat = new BufferFormat(config.r, config.g, config.b, config.a, config.depth, config.stencil, config.numSamples,
@@ -319,6 +320,7 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 		}
 		app.getApplicationListener().resize(width, height);
 	}
+
 	@Override
 	public void onSurfaceCreated (javax.microedition.khronos.opengles.GL10 gl, EGLConfig config) {
 		eglContext = ((EGL10)EGLContext.getEGL()).eglGetCurrentContext();
@@ -533,12 +535,9 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 		}
 	}
 
-	/**
-	 * Ensures the frame rate does not exceed the configured maximum.
-	 * Should only trigger on Build version smaller than 30
-	 * @param time the timestamp (in nanoseconds) recorded at the start of this frame
-	 */
-	private void capFramesPerSecond(long time){
+	/** Ensures the frame rate does not exceed the configured maximum. Should only trigger on Build version smaller than 30
+	 * @param time the timestamp (in nanoseconds) recorded at the start of this frame */
+	private void capFramesPerSecond (long time) {
 		long frameDurationNs = System.nanoTime() - time;
 		long targetDurationNs = 1_000_000_000L / fps;
 		long sleepNs = targetDurationNs - frameDurationNs;
@@ -549,6 +548,7 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 			}
 		}
 	}
+
 	@Override
 	public long getFrameId () {
 		return frameId;
@@ -756,10 +756,8 @@ public class AndroidGraphics extends AbstractGraphics implements Renderer {
 	public void setVSync (boolean vsync) {
 	}
 
-	/**
-	 * Sets an fps cap if given a value
-	 * @param fps the targeted fps; default differs by platform
-	 */
+	/** Sets an fps cap if given a value
+	 * @param fps the targeted fps; default differs by platform */
 	@Override
 	public void setForegroundFPS (int fps) {
 		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
