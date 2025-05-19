@@ -30,10 +30,9 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Touch;
 import com.google.gwt.event.dom.client.KeyCodes;
-
+import com.google.gwt.dom.client.NativeEvent;
 public class DefaultGwtInput extends AbstractInput implements GwtInput {
 	static final int MAX_TOUCHES = 20;
 	boolean justTouched = false;
@@ -591,7 +590,15 @@ public class DefaultGwtInput extends AbstractInput implements GwtInput {
 			return "mousewheel";
 		}
 	}-*/;
+	/** JSNI helper to read WheelEvent.deltaX */
+	private static native double getDeltaXWheel(NativeEvent e) /*-{
+    return e.deltaX || 0;
+}-*/;
 
+	/** JSNI helper to read WheelEvent.deltaY */
+	private static native double getDeltaYWheel(NativeEvent e) /*-{
+    return e.deltaY || 0;
+}-*/;
 	/** Kindly borrowed from PlayN. **/
 	protected int getRelativeX (NativeEvent e, CanvasElement target) {
 		float xScaleRatio = target.getWidth() * 1f / target.getClientWidth(); // Correct for canvas CSS scaling
@@ -627,12 +634,13 @@ public class DefaultGwtInput extends AbstractInput implements GwtInput {
 		addEventListener(Document.get(), "mouseup", this, true);
 		addEventListener(canvas, "mousemove", this, true);
 		addEventListener(Document.get(), "mousemove", this, true);
+		addEventListener(canvas,"wheel", this, true);
+		addEventListener(Document.get(), "wheel", this, true);
 		addEventListener(canvas, getMouseWheelEvent(), this, true);
 		addEventListener(Document.get(), "keydown", this, false);
 		addEventListener(Document.get(), "keyup", this, false);
 		addEventListener(Document.get(), "keypress", this, false);
 		addEventListener(getWindow(), "blur", this, false);
-
 		addEventListener(canvas, "touchstart", this, true);
 		addEventListener(canvas, "touchmove", this, true);
 		addEventListener(canvas, "touchcancel", this, true);
@@ -648,6 +656,7 @@ public class DefaultGwtInput extends AbstractInput implements GwtInput {
 	}
 
 	private void handleEvent (NativeEvent e) {
+
 		if (e.getType().equals("mousedown")) {
 			if (!e.getEventTarget().equals(canvas) || pressedButtons.contains(getButton(e.getButton()))) {
 				float mouseX = getRelativeX(e, canvas);
@@ -716,11 +725,14 @@ public class DefaultGwtInput extends AbstractInput implements GwtInput {
 			this.touched[0] = false;
 			if (processor != null) processor.touchUp(touchX[0], touchY[0], 0, getButton(e.getButton()));
 		}
-		if (e.getType().equals(getMouseWheelEvent())) {
-			if (processor != null) {
-				processor.scrolled(0, (int)getMouseWheelVelocity(e));
+		if ("wheel".equals(e.getType()) || getMouseWheelEvent().equals(e.getType())){
+		{
+			if (processor != null){
+				float dx = (float) getDeltaXWheel(e);
+				float dy = (float) getDeltaYWheel(e);
+				processor.scrolled(dx, dy);
+				}
 			}
-			this.currentEventTimeStamp = TimeUtils.nanoTime();
 			e.preventDefault();
 		}
 

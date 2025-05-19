@@ -23,6 +23,7 @@ import com.badlogic.gdx.tests.Box2DTest;
 import com.badlogic.gdx.tests.Box2DTestCollection;
 import com.badlogic.gdx.tests.BufferUtilsTest;
 import com.badlogic.gdx.tests.ClipboardTest;
+import com.badlogic.gdx.tests.gwt.GwtWheelEventTest;
 import com.badlogic.gdx.tests.TiledMapObjectPropertyTest;
 import com.badlogic.gdx.tests.ColorTest;
 import com.badlogic.gdx.tests.ComplexActionTest;
@@ -325,6 +326,12 @@ public class GwtTestWrapper extends AbstractTestWrapper {
 				return new GwtWindowModeTest();
 			}
 		});
+		tests.add(new GwtInstancer() {
+			public GdxTest instance () {
+				return new GwtWheelEventTest();
+			}
+		});
+
 		tests.add(new GwtInstancer() {
 			public GdxTest instance () {
 				return new I18NSimpleMessageTest();
@@ -705,6 +712,11 @@ public class GwtTestWrapper extends AbstractTestWrapper {
 			tests.add(new GwtInstancer() {
 				public GdxTest instance () {
 					return new UniformBufferObjectsTest();
+				}
+			});
+			tests.add(new GwtInstancer() {
+				public GdxTest instance () {
+					return new GwtWheelEventTest();
 				}
 			});
 		}
