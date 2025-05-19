@@ -432,9 +432,9 @@ public interface Input {
 				return "]";
 			case BACKSLASH:
 				return "\\";
-				case INTL_BACKSLASH:
-					return "\\";
-				case SEMICOLON:
+			case INTL_BACKSLASH:
+				return "\\";
+			case SEMICOLON:
 				return ";";
 			case APOSTROPHE:
 				return "'";
